@@ -1,0 +1,37 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:15
+    container_name: wonga_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: wongadb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d wongadb"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./backend/WongaApi
+      dockerfile: Dockerfile
+    container_name: wonga_backend
+    ports:
+      - "5000:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      ConnectionStrings__Default: "Host=db;Database=wongadb;Username=postgres;Password=password"
+      JWT_SECRET: "ThisIsAVeryLongSecretKeyForWongaAssessment2026MustBe64CharsLong!!"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
