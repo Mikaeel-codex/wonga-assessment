@@ -38,6 +38,7 @@ A full-stack authentication application built for the Wonga Developer Assessment
 - Auto database migrations on startup
 - CORS configured for frontend communication
 - Unit tests with xUnit
+- One command build scripts for Windows and Linux
 
 ---
 
@@ -64,6 +65,8 @@ wonga-assessment/
 │       └── Dockerfile
 ├── WongaApi.Tests/             # Unit tests
 ├── docker-compose.yml
+├── build.sh                    # Build script for Linux/Mac
+├── build.bat                   # Build script for Windows
 └── README.md
 ```
 
@@ -76,7 +79,19 @@ wonga-assessment/
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 - Git
 
-### Run the Application
+### Quick Start (Recommended)
+
+**Windows:**
+```bat
+build.bat
+```
+
+**Mac/Linux:**
+```bash
+bash build.sh
+```
+
+### Manual Start
 
 1. Clone the repository:
 ```bash
@@ -177,14 +192,21 @@ From the project root:
 dotnet test
 ```
 
+Expected output:
+```
+total: 4, failed: 0, succeeded: 4
+```
+
 ---
 
 ## Environment Variables
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `JWT_SECRET` | Secret key for JWT signing | Set in docker-compose.yml |
-| `ConnectionStrings__Default` | PostgreSQL connection string | Set in docker-compose.yml |
+| Variable | Description |
+|----------|-------------|
+| `JWT_SECRET` | Secret key for JWT signing |
+| `ConnectionStrings__Default` | PostgreSQL connection string |
+
+Both are configured in `docker-compose.yml`.
 
 ---
 
