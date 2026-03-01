@@ -1,87 +1,206 @@
-# Wonga Assessment – Full Stack Application
+# Wonga Developer Assessment – Full Stack Application
 
-## 📌 Overview
-This project is a full-stack application built for the Wonga Developer Assessment.
+## Overview
 
-The backend is built with:
-- ASP.NET Core 8
-- Entity Framework Core
-- PostgreSQL
-- JWT Authentication
-- Docker
-
-The frontend (in progress) will consume the backend API.
+A full-stack authentication application built for the Wonga Developer Assessment. The application demonstrates a complete login/registration flow with a React frontend, C# API backend, PostgreSQL database, and JWT authentication — all containerized with Docker.
 
 ---
 
-## 🚀 Backend Setup
+## Tech Stack
 
-### 1️⃣ Run with Docker
+**Frontend**
+- React
+- React Router DOM
+- Axios
+- CSS3 (custom animations, glassmorphism)
 
-From project root:
+**Backend**
+- ASP.NET Core 9
+- Entity Framework Core
+- BCrypt.Net (password hashing)
+- JWT Authentication
 
+**Database**
+- PostgreSQL 15
+
+**Infrastructure**
+- Docker
+- Docker Compose
+
+---
+
+## Features
+
+- User registration with first name, last name, email and password
+- Secure login with JWT token generation
+- Protected user details page (inaccessible without authentication)
+- Password hashing with BCrypt
+- Auto database migrations on startup
+- CORS configured for frontend communication
+- Unit tests with xUnit
+
+---
+
+## Project Structure
+```
+wonga-assessment/
+├── backend/
+│   └── WongaApi/
+│       ├── Controllers/        # AuthController, UserController
+│       ├── Data/               # AppDbContext, DbContextFactory
+│       ├── DTOs/               # Request/Response objects
+│       ├── Models/             # User model
+│       ├── Migrations/         # EF Core migrations
+│       ├── Services/           # AuthService (business logic)
+│       ├── Program.cs          # App entry point
+│       └── Dockerfile
+├── frontend/
+│   └── wonga-frontend/
+│       ├── src/
+│       │   ├── components/     # ProtectedRoute, ShapeBlur
+│       │   ├── pages/          # AuthPage, UserDetailsPage
+│       │   ├── services/       # api.js (Axios config)
+│       │   └── App.js
+│       └── Dockerfile
+├── WongaApi.Tests/             # Unit tests
+├── docker-compose.yml
+└── README.md
+```
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+- Git
+
+### Run the Application
+
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/wonga-assessment.git
+cd wonga-assessment
+```
+
+2. Start all services with Docker Compose:
 ```bash
 docker compose up --build
+```
 
-The API will run at:
+3. Access the application:
+   - Frontend: http://localhost:3000
+   - Backend API: http://localhost:5000
 
-http://localhost:5000
+> The database migrations run automatically on startup — no manual setup required.
 
-2️⃣ Required Environment Variable
+### Stop the Application
+```bash
+docker compose down
+```
 
-The backend requires:
+To also remove all database data:
+```bash
+docker compose down -v
+```
 
-JWT_SECRET
+---
 
-This is configured in docker-compose.yml.
+## API Endpoints
 
-3️⃣ Run Tests
-
-From project root:
-
-dotnet test
-🔐 API Endpoints
-Register
-
+### Register a User
+```
 POST /api/auth/register
+```
+**Body:**
+```json
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "john@example.com",
+  "password": "Password123!"
+}
+```
+**Response:**
+```json
+{
+  "token": "eyJhbGci..."
+}
+```
 
-Login
+---
 
+### Login
+```
 POST /api/auth/login
+```
+**Body:**
+```json
+{
+  "email": "john@example.com",
+  "password": "Password123!"
+}
+```
+**Response:**
+```json
+{
+  "token": "eyJhbGci..."
+}
+```
 
-Get Current User (Protected)
+---
 
+### Get User Details (Protected)
+```
 GET /api/user/me
-Requires Bearer token.
+```
+**Headers:**
+```
+Authorization: Bearer <token>
+```
+**Response:**
+```json
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "john@example.com"
+}
+```
 
-🧪 Testing
+---
 
-Unit tests are implemented for:
+## Running Tests
 
-User registration
+From the project root:
+```bash
+dotnet test
+```
 
-Duplicate email handling
+---
 
-Login success
+## Environment Variables
 
-Login failure
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `JWT_SECRET` | Secret key for JWT signing | Set in docker-compose.yml |
+| `ConnectionStrings__Default` | PostgreSQL connection string | Set in docker-compose.yml |
 
-🛠️ Tech Stack
+---
 
-.NET 8
+## How It Works
 
-EF Core
+1. User registers via the React frontend form
+2. The C# API hashes the password with BCrypt and stores the user in PostgreSQL
+3. On successful registration the user is redirected to login
+4. User logs in — the API verifies credentials and returns a JWT token
+5. The frontend stores the token in localStorage
+6. The protected User Details page sends the JWT token with every request
+7. The API validates the token and returns the user's details
+8. If the token is missing or invalid the user is redirected to login
 
-PostgreSQL
+---
 
-JWT
+## Author
 
-xUnit
-
-Docker
-
-📂 Project Structure
-backend/          → ASP.NET Core API
-WongaApi.Tests/   → Unit Tests
-docker-compose.yml
-WongaAssessment.sln
+Built by Mikaeel Pathan for the Wonga Developer Assessment.

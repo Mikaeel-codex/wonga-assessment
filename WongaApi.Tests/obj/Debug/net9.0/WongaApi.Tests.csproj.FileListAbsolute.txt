@@ -126,3 +126,4 @@ D:\wonga-assessment\WongaApi.Tests\obj\Debug\net9.0\refint\WongaApi.Tests.dll
 D:\wonga-assessment\WongaApi.Tests\obj\Debug\net9.0\WongaApi.Tests.pdb
 D:\wonga-assessment\WongaApi.Tests\obj\Debug\net9.0\WongaApi.Tests.genruntimeconfig.cache
 D:\wonga-assessment\WongaApi.Tests\obj\Debug\net9.0\ref\WongaApi.Tests.dll
+D:\wonga-assessment\WongaApi.Tests\obj\Debug\net9.0\WongaApi.Tests.sourcelink.json
